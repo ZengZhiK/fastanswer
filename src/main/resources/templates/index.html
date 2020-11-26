@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_fragments :: head(~{::title}, ~{})">
+  <title>快答社区</title>
+</head>
+<body>
+<!--导航栏-->
+<nav th:replace="_fragments :: nav"></nav>
+
+<div class="container main">
+  <!--左侧主要内容-->
+  <div class="col-md-8 col-sm-12 clearfix">
+    <!--页面标题-->
+    <h3>
+      <span class="glyphicon glyphicon-list"></span>
+      <span>发现</span>
+    </h3>
+    <hr>
+    <!--问题列表-->
+    <div class="media" th:each="questionDTO : ${pageInfo.list}">
+      <div class="media-left">
+        <img class="media-object img-thumbnail" th:src="${questionDTO.userDTO.githubAvatarUrl}"
+             style="width: 48px; height: 48px;">
+      </div>
+      <div class="media-body">
+        <a th:href="@{/question/{id}(id=${questionDTO.id})}">
+          <h4 class="media-heading" th:text="${questionDTO.title}"></h4>
+        </a>
+        <p class="text-muted">
+        <p class="hidden-xs">
+          • <span th:text="${questionDTO.userDTO.githubName}"></span> 发起了问题 |
+          • <span th:text="${questionDTO.commentCount}"></span> 个回复 |
+          • <span th:text="${questionDTO.viewCount}"></span> 次浏览 |
+          • <span th:text="${#temporals.format(questionDTO.gmtModified, 'yyyy-MM-dd HH:mm')}"></span>
+        </p>
+        <p class="hidden-lg hidden-md hidden-sm">
+          • <span th:text="${questionDTO.userDTO.githubName}"></span> 发起了问题
+        </p>
+        <p class="hidden-lg hidden-md hidden-sm">
+          • <span th:text="${questionDTO.commentCount}"></span> 个回复 |
+          • <span th:text="${questionDTO.viewCount}"></span> 次浏览
+        </p>
+        <p class="hidden-lg hidden-md hidden-sm">
+          • <span th:text="${#temporals.format(questionDTO.gmtModified, 'yyyy-MM-dd HH:mm')}"></span>
+        </p>
+        </p>
+      </div>
+    </div>
+    <!--分页导航-->
+    <div class="row text-center" th:if="${pageInfo.navigatepageNums.length > 1}">
+      <ul class="pagination">
+        <li th:if="${pageInfo.hasPreviousPage}">
+          <a th:href="${keywords == null} ? @{/(page=${pageInfo.prePage})} : @{/(page=${pageInfo.prePage}, keywords=${keywords})}">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+          </a>
+        </li>
+        <li class="hidden-xs"><a th:href="${keywords == null} ? @{/} : @{/(keywords=${keywords})}">首页</a></li>
+        <li th:each="navigatepageNum : ${pageInfo.navigatepageNums}"
+            th:class="${pageInfo.pageNum == navigatepageNum} ? 'active'">
+          <a th:href="${keywords == null} ? @{/(page=${navigatepageNum})} : @{/(page=${navigatepageNum}, keywords=${keywords})}"
+             th:text="${navigatepageNum}"></a>
+        </li>
+        <li class="hidden-xs">
+          <a th:href="${keywords == null} ? @{/(page=${pageInfo.pages})} : @{/(page=${pageInfo.pages}, keywords=${keywords})}">尾页</a>
+        </li>
+        <li th:if="${pageInfo.hasNextPage}">
+          <a th:href="${keywords == null} ? @{/(page=${pageInfo.nextPage})} : @{/(page=${pageInfo.nextPage}, keywords=${keywords})}">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!--右侧次要内容-->
+  <div class="col-md-4 col-sm-12" style="padding: 0 30px;">
+    <h3 style="margin-bottom: 30px;">公告</h3>
+    <p>• 本社区只支持<code>GitHub</code>登录</p>
+    <p>• 希望与各位多多交流编程心得</p>
+  </div>
+</div>
+
+<!--底部栏-->
+<nav th:replace="_fragments :: footer"></nav>
+</body>
+</html>

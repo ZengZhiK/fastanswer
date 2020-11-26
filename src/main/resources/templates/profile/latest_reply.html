@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_fragments :: head(~{::title}, ~{})">
+  <title>最新回复-快答社区</title>
+</head>
+<body>
+<!--导航栏-->
+<nav th:replace="_fragments :: nav"></nav>
+
+<div class="container main">
+  <!--左侧主要内容-->
+  <div class="col-md-8 col-sm-12 clearfix">
+    <!--页面标题-->
+    <h3>
+      <img th:src="${session.loginUser.githubAvatarUrl}" class="img-thumbnail img-circle"
+           style="width: 30px; height: 30px;">
+      <span>最新回复</span>
+    </h3>
+    <hr>
+    <!--回复列表-->
+    <div class="media" th:each="notificationDTO : ${pageInfo.list}">
+      <div class="media-left">
+        <img class="media-object img-thumbnail" th:src="${notificationDTO.notifierGithubAvatarUrl}"
+             style="width: 48px; height: 48px;">
+      </div>
+      <div class="media-body">
+        <h4 class="media-heading">
+          <span th:text="${notificationDTO.notifierGithubName}"></span>
+          回复了你的问题
+          <a th:href="@{/question/{id}(id=${notificationDTO.questionId})}"
+             th:text="${notificationDTO.questionTitle}"></a>
+          <a href="javascript:;" class="badge"
+             th:if="${notificationDTO.status == false}" style="background-color: orangered;"
+             th:attr="data-id=${notificationDTO.id}" onclick="updateStatus(this)">未读
+          </a>
+        </h4>
+        <div class="text-muted" th:if="${notificationDTO.parentCommentContent != null}">
+          上一条回复：<span th:text="${notificationDTO.parentCommentContent}"></span>
+        </div>
+        <p class="text-muted">
+          回复内容：<span th:text="${notificationDTO.commentContent}"></span>
+        </p>
+      </div>
+    </div>
+    <!--分页导航-->
+    <div class="row text-center" th:if="${pageInfo.navigatepageNums.length > 1}">
+      <ul class="pagination">
+        <li th:if="${pageInfo.hasPreviousPage}">
+          <a th:href="@{/profile/latest_reply(page=${pageInfo.prePage})}"><span
+                  class="glyphicon glyphicon-chevron-left"></span></a>
+        </li>
+        <li class="hidden-xs"><a th:href="@{/profile/latest_reply}">首页</a></li>
+        <li th:each="navigatepageNum : ${pageInfo.navigatepageNums}"
+            th:class="${pageInfo.pageNum == navigatepageNum} ? 'active'">
+          <a th:href="@{/profile/latest_reply(page=${navigatepageNum})}" th:text="${navigatepageNum}"></a>
+        </li>
+        <li class="hidden-xs"><a th:href="@{/profile/latest_reply(page=${pageInfo.pages})}">尾页</a></li>
+        <li th:if="${pageInfo.hasNextPage}">
+          <a th:href="@{/profile/latest_reply(page=${pageInfo.nextPage})}"><span
+                  class="glyphicon glyphicon-chevron-right"></span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!--右侧次要内容-->
+  <div class="col-md-4 col-sm-12" style="padding: 0 30px;">
+    <div class="hidden-sm hidden-xs" style="height: 80px;"></div>
+    <div class="list-group">
+      <a th:href="@{/profile/my_question}" class="list-group-item">我的问题</a>
+      <a th:href="@{/profile/latest_reply}" class="list-group-item active">
+        最新回复
+        <span class="badge pull-right" th:text="${session.unread}"></span></a>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!--底部栏-->
+<nav th:replace="_fragments :: footer"></nav>
+
+<script type="text/javascript" th:inline="javascript">
+  /*<![CDATA[*/
+  // 选择标签
+  function updateStatus(that) {
+    var id = $(that).data('id');
+    $.ajax({
+      url: [[@{/notification}]],
+      type: 'put',
+      data: {id: id},
+      dataType: 'json',
+      success: function (response) {
+        if (response.ok) {
+          $(that).text('已读');
+          $(that).css("background-color", "lightslategray");
+        }
+      }
+    })
+  }
+
+  /*]]>*/
+</script>
+</body>
+</html>

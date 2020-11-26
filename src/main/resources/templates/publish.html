@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_fragments :: head(~{::title}, ~{::link})">
+  <title>提问-快答社区</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/jquery.tagsinput.min.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/editor.md/css/editormd.min.css}"/>
+</head>
+<body>
+<!--导航栏-->
+<nav th:replace="_fragments :: nav"></nav>
+
+<div class="container main">
+  <!--左侧主要内容-->
+  <div class="col-md-9 col-sm-12 clearfix">
+    <!--页面标题-->
+    <h3>
+      <span class="glyphicon glyphicon-pencil"></span>
+      <span th:text="${questionVO == null ? '发起' : '修改'}"></span>
+    </h3>
+    <hr>
+    <!--问题表单-->
+    <form id="questForm" th:action="@{/publish}">
+      <!--问题id-->
+      <input th:if="${questionVO != null}" type="hidden" name="id" th:value="${questionVO.id}">
+      <!--问题标题-->
+      <div class="form-group">
+        <label for="title">问题标题（简单扼要）:</label>
+        <input type="text" class="form-control" id="title" name="title" placeholder="问题标题...."
+               th:value="${questionVO != null} ? ${questionVO.title}">
+      </div>
+      <!--问题描述-->
+      <label for="description">问题补充（必填，请参照右侧提示，可以点击<span class="glyphicon glyphicon-eye-close"></span>关闭预览）:</label>
+      <div id="questionEditor" class="form-group" style="z-index: 0;">
+        <textarea id="description" name="description" th:text="${questionVO != null} ? ${questionVO.description}"></textarea>
+      </div>
+      <!--问题标签-->
+      <div class="form-group">
+        <label for="tag">添加标签（可在下方选取）:</label>
+        <input type="text" class="tags" id="tag" name="tag"
+               th:value="${questionVO != null} ? ${questionVO.tag}">
+      </div>
+      <!--标签列表-->
+      <ul class="nav nav-tabs">
+        <li th:each="tagDTO, state : ${tagDTOList}" th:class="${state.first ? 'active' : ''}">
+          <a data-toggle="tab" th:href="|#${tagDTO.categoryName}|" th:text="${tagDTO.categoryName}"></a>
+        </li>
+      </ul>
+      <div class="tab-content" style="margin-top: 8px;">
+        <div th:each="tagDTO, state : ${tagDTOList}" th:id="${tagDTO.categoryName}"
+             th:class="${state.first ? 'active tab-pane' : 'tab-pane'}">
+          <a class="label label-info" style="margin-right: 5px; margin-bottom: 5px; display: inline-block;"
+             th:each="tag: ${tagDTO.tagList}" th:attr="data-tagname=${tag}"
+             onclick="selectTag(this)">
+            <span class="glyphicon glyphicon-tags"></span>&nbsp;
+            <span th:text="${tag}"></span>
+          </a>
+        </div>
+      </div>
+      <!--错误信息-->
+      <div class="bg-danger" id="errorMsg"></div>
+      <!--提交按钮-->
+      <button id="submitQuestFormBtn" type="submit" class="btn btn-success pull-right" style="margin-bottom: 15px;"
+              th:text="${questionVO == null ? '确认发起' : '确认修改'}">
+      </button>
+    </form>
+  </div>
+  <!--右侧次要内容-->
+  <div class="col-md-3 col-sm-12" style="padding: 0 30px;">
+    <h3 style="margin-bottom: 30px;">问题发起指南</h3>
+    <p>• 问题标题: 请用精简的语言描述您发布的问题，不超过<code>50</code>字</p>
+    <p>• 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料</p>
+    <p>• 选择标签: 选择或填写一个或者多个合适的标签，每个不超过<code>20</code>个字符，最好少于<code>5</code>个标签</p>
+  </div>
+</div>
+
+<!--底部栏-->
+<nav th:replace="_fragments :: footer"></nav>
+
+<script type="text/javascript" th:src="@{/js/jquery.validate.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.form.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.loading.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.tagsinput.min.js}"></script>
+<script type="text/javascript" th:src="@{/editor.md/js/editormd.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+  /*<![CDATA[*/
+  // 选择标签
+  function selectTag(that) {
+    var newTag = $(that).data('tagname');
+    if ($('#tag').tagExist(newTag)) {
+      return;
+    }
+    $('#tag').addTag(newTag);
+  }
+  $(function () {
+    // Initialize editor.md
+    editormd("questionEditor", {
+      width: '100%',
+      height: 500,
+      htmlDecode: true,
+      // watch: false,
+      emoji: true,
+      placeholder: '请输入问题详情...',
+      toolbarAutoFixed: false,
+      disabledKeyMaps: [
+        "F11"  // disable some default keyboard shortcuts handle
+      ],
+      imageUpload: true,
+      imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+      onload: function () {
+        var keyMap = {
+          "Ctrl-S": function (cm) {
+            return false;
+          },
+          "Ctrl-E": function (cm) {
+            return false;
+          }
+        }
+        this.addKeyMap(keyMap);
+      },
+      toolbarIcons: function () {
+        // Using "||" set icons align right.
+        return [
+          "undo", "redo", "|",
+          "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
+          "h1", "h2", "h3", "h4", "h5", "h6", "|",
+          "list-ul", "list-ol", "hr", "|",
+          "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime", "html-entities", "pagebreak", "|",
+          "goto-line", "watch", "preview", "clear", "search", "|",
+          "help", "info"
+        ];
+      },
+      imageUploadURL: [[@{/image/upload}]],
+      path: [[@{/editor.md/lib/}]]
+    })
+    // Initialize tagsinput
+    $('#tag').tagsInput({width: 'auto', height: 'auto', defaultText: '标签...', maxChars: 20});
+    // 问题表单校验提交
+    $('#questForm').validate({
+      rules: {
+        title: {
+          required: true,
+          maxlength: 50
+        }
+      },
+      messages: {
+        title: {
+          required: '标题内容不能为空',
+          maxlength: '标题长度不能大于50个字符'
+        }
+      },
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('text-danger');
+        element.closest('.form-group').append(error);
+      },
+      submitHandler: function (form) {
+        $('body').loading({message: '提交中...'});
+        $('#errorMsg').empty();
+
+        var method = [[${questionVO == null}]] ? 'post' : 'put';
+        $(form).ajaxSubmit({
+          dataType: 'json',
+          type: method,
+          success: function (response) {
+            $('body').loading('stop');
+            if (response.ok) {
+              if (method === 'post') {
+                window.location.href = [[@{/}]];
+              } else if (method === 'put') {
+                window.location.href = [[${questionVO == null} ? @{/} : @{/question/{id}(id=${questionVO.id})}]];
+              }
+            } else {
+              $('#errorMsg').append('<p>' + response.message + '！提交失败！' + '<p>');
+            }
+          }
+        })
+      }
+    });
+  })
+  /*]]>*/
+</script>
+
+</body>
+</html>

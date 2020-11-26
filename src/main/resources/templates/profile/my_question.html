@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_fragments :: head(~{::title}, ~{})">
+  <title>我的问题-快答社区</title>
+</head>
+<body>
+<!--导航栏-->
+<nav th:replace="_fragments :: nav"></nav>
+
+<div class="container main">
+  <!--左侧主要内容-->
+  <div class="col-md-8 col-sm-12 clearfix">
+    <!--页面标题-->
+    <h3>
+      <img th:src="${session.loginUser.githubAvatarUrl}" class="img-thumbnail img-circle"
+           style="width: 30px; height: 30px;">
+      <span>我的问题</span>
+    </h3>
+    <hr>
+    <!--问题列表-->
+    <div class="media" th:each="questionBaseDTO : ${pageInfo.list}">
+      <div class="media-body">
+        <a th:href="@{/question/{id}(id=${questionBaseDTO.id})}"><h4 class="media-heading" th:text="${questionBaseDTO.title}"></h4></a>
+        <p class="text-muted">
+          <p class="hidden-xs">
+            • <span th:text="${questionBaseDTO.commentCount}"></span> 个回复 |
+            • <span th:text="${questionBaseDTO.viewCount}"></span> 次浏览 |
+            • <span th:text="${#temporals.format(questionBaseDTO.gmtModified, 'yyyy-MM-dd HH:mm')}"></span>
+            &nbsp;&nbsp;<a th:href="@{/publish/{id}(id=${questionBaseDTO.id})}">编辑</a>
+          </p>
+          <p class="hidden-lg hidden-md hidden-sm">
+            • <span th:text="${questionBaseDTO.commentCount}"></span> 个回复 |
+            • <span th:text="${questionBaseDTO.viewCount}"></span> 次浏览
+          </p>
+          <p class="hidden-lg hidden-md hidden-sm">
+            • <span th:text="${#temporals.format(questionBaseDTO.gmtModified, 'yyyy-MM-dd HH:mm')}"></span>
+            &nbsp;&nbsp;<a th:href="@{/publish/{id}(id=${questionBaseDTO.id})}">编辑</a>
+          </p>
+        </p>
+      </div>
+    </div>
+    <!--分页导航-->
+    <div class="row text-center" th:if="${pageInfo.navigatepageNums.length > 1}">
+      <ul class="pagination">
+        <li th:if="${pageInfo.hasPreviousPage}">
+          <a th:href="@{/profile/my_question(page=${pageInfo.prePage})}"><span
+                  class="glyphicon glyphicon-chevron-left"></span></a>
+        </li>
+        <li class="hidden-xs"><a th:href="@{/profile/my_question}">首页</a></li>
+        <li th:each="navigatepageNum : ${pageInfo.navigatepageNums}"
+            th:class="${pageInfo.pageNum == navigatepageNum} ? 'active'">
+          <a th:href="@{/profile/my_question(page=${navigatepageNum})}" th:text="${navigatepageNum}"></a>
+        </li>
+        <li class="hidden-xs"><a th:href="@{/profile/my_question(page=${pageInfo.pages})}">尾页</a></li>
+        <li th:if="${pageInfo.hasNextPage}">
+          <a th:href="@{/profile/my_question(page=${pageInfo.nextPage})}"><span
+                  class="glyphicon glyphicon-chevron-right"></span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!--右侧次要内容-->
+  <div class="col-md-4 col-sm-12" style="padding: 0 30px;">
+    <div class="hidden-sm hidden-xs" style="height: 80px;"></div>
+    <div class="list-group">
+      <a th:href="@{/profile/my_question}" class="list-group-item active">我的问题</a>
+      <a th:href="@{/profile/latest_reply}" class="list-group-item">
+        最新回复
+        <span class="badge pull-right" th:text="${session.unread}"></span></a>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!--底部栏-->
+<nav th:replace="_fragments :: footer"></nav>
+</body>
+</html>

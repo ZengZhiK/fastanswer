@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_fragments :: head(~{::title}, ~{::link})">
+  <title>问题详情-快答社区</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/editor.md/css/editormd.preview.css}"/>
+</head>
+<body>
+<!--导航栏-->
+<nav th:replace="_fragments :: nav"></nav>
+
+<div class="container main">
+  <!--左侧主要内容-->
+  <div class="col-md-9 col-sm-12">
+    <!--问题标题-->
+    <h1><span th:text="${questionDetailDTO.title}"></span></h1>
+    <!--问题信息-->
+    <div>
+      • <span th:text="${questionDetailDTO.viewCount}"></span> 次浏览&nbsp;&nbsp;&nbsp;
+      • <span th:text="${#temporals.format(questionDetailDTO.gmtModified, 'yyyy-MM-dd HH:mm')}"></span>
+    </div>
+    <hr>
+    <!--问题详情-->
+    <div id="questionView">
+      <textarea th:text="${questionDetailDTO.description}"></textarea>
+    </div>
+    <!--问题标签-->
+    <div th:if="${questionDetailDTO.tag != ''}">
+      <a class="label label-info" style="margin-right: 5px; margin-bottom: 5px; display: inline-block;" th:each="tag : ${questionDetailDTO.tag.split(',')}">
+        <span class="glyphicon glyphicon-tags"></span>&nbsp;
+        <span th:text="${tag}"></span>
+      </a>
+    </div>
+    <hr>
+    <!--问题编辑-->
+    <a th:href="@{/publish/{id}(id=${questionDetailDTO.id})}"
+       th:if="${session.loginUser != null && session.loginUser.id == questionDetailDTO.userDTO.id}">
+      <span class="glyphicon glyphicon-pencil"></span>
+      编辑
+    </a>
+    <hr th:if="${session.loginUser != null && session.loginUser.id == questionDetailDTO.userDTO.id}">
+    <!--问题回复-->
+    <h3><span id="commentCount" class="badge" th:text="${questionDetailDTO.commentCount}"></span> 个回复</h3>
+    <ul th:fragment="comment" id="commentList" class="media-list">
+      <!--一级回复-->
+      <li class="media" th:each="commentDTO : ${commentDTOList}">
+        <div class="media-left">
+          <img th:src="${commentDTO.userDTO.githubAvatarUrl}" style="width: 40px; height: 40px;">
+        </div>
+        <div class="media-body">
+          <p class="media-heading" th:text="${commentDTO.userDTO.githubName}"></p>
+          <p th:text="${commentDTO.content}"></p>
+          <p class="text-light">
+            <span style="margin-right: 15px;" th:text="${#temporals.format(commentDTO.gmtCreate, 'yyyy-MM-dd HH:mm')}"></span>
+            <a href="javascript:;" th:attr="data-rootid=${commentDTO.id},data-parentid=${commentDTO.id},data-githubname=${commentDTO.userDTO.githubName}"
+               onclick="scrollToCommentForm(this)"
+               class="text-light">回复</a>
+          </p>
+          <!--二、三级回复-->
+          <div class="media" th:each="subCommentDTO : ${commentDTO.subCommentDTOList}">
+            <div class="media-left">
+              <img class="media-object" th:src="${subCommentDTO.userDTO.githubAvatarUrl}"
+                   style="width: 30px; height: 30px;">
+            </div>
+            <div class="media-body">
+              <p class="media-heading">
+                <span th:text="${subCommentDTO.userDTO.githubName}"></span>
+                <span th:if="${subCommentDTO.parentId != subCommentDTO.rootId}">回复</span>
+                <span style="color: #337ab7;" th:if="${subCommentDTO.parentId != subCommentDTO.rootId}"
+                      th:text="|@${subCommentDTO.githubNameForBeCriticized}|"></span>
+              </p>
+              <p th:text="${subCommentDTO.content}"></p>
+              <p class="text-light">
+                <span style="margin-right: 15px;"
+                      th:text="${#temporals.format(subCommentDTO.gmtCreate, 'yyyy-MM-dd HH:mm')}"></span>
+                <a href="javascript:;" th:attr="data-rootid=${subCommentDTO.rootId},data-parentid=${subCommentDTO.id},data-githubname=${subCommentDTO.userDTO.githubName}"
+                   onclick="scrollToCommentForm(this)"
+                   class="text-light">回复</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <hr>
+    <!--回复表单-->
+    <p th:if="${session.loginUser == null}">登录后可发表回复</p>
+    <form class="clearfix" id="commentForm" th:action="@{/comment}" th:if="${session.loginUser != null}">
+      <input type="hidden" id="questionId" name="questionId" th:value="${questionDetailDTO.id}">
+      <input type="hidden" id="rootId" name="rootId" value="">
+      <input type="hidden" id="parentId" name="parentId" value="">
+      <div class="form-group">
+        <label for="content">回复内容:</label>
+        <textarea class="form-control" id="content" name="content" placeholder="发表一条友善的回复...."
+                  rows="5" style="resize:none"></textarea>
+      </div>
+      <div class="bg-danger" id="errorMsg"></div>
+      <div class="bg-success" id="successMsg"></div>
+      <button id="submitCommentFormBtn" type="submit" class="btn btn-success pull-right">发表回复</button>
+      <button onclick="resetCommentForm()" type="button" class="btn btn-danger pull-right" style="margin-right: 15px;">清空</button>
+    </form>
+    <hr>
+  </div>
+  <!--右侧次要内容-->
+  <div class="col-md-3 col-sm-12" style="padding: 0 30px;">
+    <!--发起人-->
+    <h4>发起人</h4>
+    <div class="text-center">
+      <a th:href="${questionDetailDTO.userDTO.githubHtmlUrl}" target="_blank">
+        <img class="img-thumbnail" th:src="${questionDetailDTO.userDTO.githubAvatarUrl}"
+           style="width: 48px; height: 48px;">
+      </a>
+      <h5 th:text="${questionDetailDTO.userDTO.githubName}"></h5>
+    </div>
+    <hr>
+    <!--相关问题-->
+    <h4>相关问题</h4>
+    <ul class="question-related">
+      <li th:each="relatedQuestionDTO : ${RelatedQuestionDTOList}">
+        <a th:href="@{/question/{id}(id=${relatedQuestionDTO.id})}" th:text="${relatedQuestionDTO.title}"></a>
+      </li>
+    </ul>
+    <hr>
+  </div>
+</div>
+
+<!--底部栏-->
+<nav th:replace="_fragments :: footer"></nav>
+
+<script type="text/javascript" th:src="@{/js/jquery.validate.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.form.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.loading.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.scrollTo.min.js}"></script>
+<script type="text/javascript" th:src="@{/editor.md/js/editormd.min.js}"></script>
+<script type="text/javascript" th:src="@{/editor.md/lib/marked.min.js}"></script>
+<script type="text/javascript" th:src="@{/editor.md/lib/prettify.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+  /*<![CDATA[*/
+  // 跳转到评论表单，并设置好隐藏域
+  function scrollToCommentForm(that) {
+    $(window).scrollTo('#commentForm', 100);
+    var rootId = $(that).data('rootid')
+    var parentId = $(that).data('parentid');
+    var githubName = $(that).data('githubname');
+    $('#rootId').val(rootId);
+    $('#parentId').val(parentId);
+    $('#content').attr('placeholder', '回复@' + githubName);
+  }
+  // 重置评论表单
+  function resetCommentForm() {
+    $('#commentForm')[0].reset();
+    $('#content').attr('placeholder', '发表一条友善的回复....');
+  }
+  $(function () {
+    // markdown显示
+    editormd.markdownToHTML('questionView', {htmlDecode: true});
+    // 异步请求评论
+    $('#commentList').load([[@{/comment(questionId=${questionDetailDTO.id})}]]);
+    // 评论表单校验提交
+    $('#commentForm').validate({
+      rules: {
+        content: {
+          required: true,
+          maxlength: 512
+        }
+      },
+      messages: {
+        content: {
+          required: '评论内容不能为空',
+          maxlength: '评论长度不能大于512个字符'
+        }
+      },
+      errorElement: 'span',
+      errorPlacement: function (error, element) {
+        error.addClass('text-danger');
+        element.closest('.form-group').append(error);
+      },
+      submitHandler: function (form) {
+        $('body').loading({message: '发表中...'});
+        $('#errorMsg').empty();
+
+        var method = 'post';
+        $(form).ajaxSubmit({
+          dataType: 'json',
+          type: method,
+          success: function (response) {
+            $('body').loading('stop');
+            if (response.ok) {
+              $(form)[0].reset();
+              $('#commentCount').text(parseInt($('#commentCount').text()) + 1);
+              $('#commentList').load([[@{/comment(questionId=${questionDetailDTO.id})}]]);
+              $('#successMsg').append('<p>发表成功！<p>');
+              setTimeout(function () {$('#successMsg').empty()}, 3000);
+            } else {
+              $('#errorMsg').append('<p>' + response.message + '！发表失败！' + '<p>');
+            }
+          }
+        })
+      }
+    });
+  })
+  /*]]>*/
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzk.fastanswer.mapper.QuestionMapper">
+    <update id="updateViewCountOnce" parameterType="Long">
+        UPDATE
+            `question`
+        SET
+            `view_count` = `view_count` + 1
+        WHERE
+            `id` = #{id};
+    </update>
+
+    <update id="updateCommentCountOnce" parameterType="Long">
+        UPDATE
+            `question`
+        SET
+            `comment_count` = `comment_count` + 1
+        WHERE
+            `id` = #{id};
+    </update>
+
+    <select id="selectRelated" parameterType="com.zzk.fastanswer.model.entity.Question" resultType="com.zzk.fastanswer.model.entity.Question">
+        SELECT * FROM QUESTION WHERE id != #{id} AND tag regexp #{tag} LIMIT 10
+    </select>
+</mapper>

@@ -1,0 +1,20 @@
+body {
+    background-image: url("../img/bg.jpg");
+}
+
+.main {
+    background-color: white;
+}
+
+.text-light {
+    color: #99a2aa !important;
+}
+
+.text-light :hover {
+    color: #337ab7 !important;
+    text-decoration: none !important;
+}
+
+#tag_tag {
+    width: 275px !important;
+}

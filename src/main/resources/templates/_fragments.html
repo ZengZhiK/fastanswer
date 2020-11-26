@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title, links)">
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="description" content=""/>
+  <meta name="keywords" content=""/>
+  <title th:replace="${title}"></title>
+  <link rel="shortcut icon" type="image/x-icon" th:href="@{/img/favicon.ico}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
+  <script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+  <th:block th:replace="${links}"/>
+</head>
+<body>
+<!--导航栏-->
+<nav th:fragment="nav" class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-nav-bar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" th:href="@{/}">快答社区</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="top-nav-bar">
+      <form class="navbar-form navbar-left" method="get" th:action="@{/}">
+        <div class="form-group">
+          <input type="text" name="keywords" class="form-control" placeholder="搜索问题..."
+                 th:value="${keywords != null} ? ${keywords}">
+        </div>
+        <button type="submit" class="btn btn-default">搜索</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a th:href="@{/}">首页</a></li>
+
+        <li th:if="${session.loginUser == null}">
+          <a th:href="@{/system/login}">登录</a>
+        </li>
+
+        <li th:if="${session.loginUser != null}">
+          <a th:href="@{/publish}">提问</a>
+        </li>
+
+        <li th:if="${session.loginUser != null}">
+          <a th:href="@{/profile/latest_reply}">
+            <span class="badge" style="background-color: lightslategray;">
+              <span class="glyphicon glyphicon-bell"></span>
+              <span th:text="${session.unread}"></span>
+            </span>
+          </a>
+        </li>
+
+        <li class="dropdown" th:if="${session.loginUser != null}">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <img th:src="${session.loginUser.githubAvatarUrl}" class="img-circle"
+                 style="width: 22px; height: 22px;">
+            <span th:text="${session.loginUser.githubName}"></span>
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a th:href="@{/profile/my_question}">我的问题</a></li>
+            <li><a th:href="@{/profile/latest_reply}">最新回复
+              <span class="badge pull-right" th:text="${session.unread}"></span></a>
+            </li>
+            <li><a th:href="@{/system/logout}">退出登录</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!--底部栏-->
+<footer th:fragment="footer" class="panel-footer" style="margin-top: 20px;">
+  <div class="container">
+    <div class="row footer-top text-center">
+      <h5>Copyright © 2020 · 快答社区 · Design By <a href="https://github.com/ZengZhiK" target="_blank">ZengZhiK</a></h5>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
