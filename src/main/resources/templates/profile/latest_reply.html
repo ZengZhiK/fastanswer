@@ -26,7 +26,7 @@
       <div class="media-body">
         <h4 class="media-heading">
           <span th:text="${notificationDTO.notifierGithubName}"></span>
-          回复了你的问题
+          回复了问题
           <a th:href="@{/question/{id}(id=${notificationDTO.questionId})}"
              th:text="${notificationDTO.questionTitle}"></a>
           <a href="javascript:;" class="badge"

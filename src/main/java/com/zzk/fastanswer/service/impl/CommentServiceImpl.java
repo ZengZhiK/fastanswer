@@ -48,15 +48,32 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         // 查询被评论的问题
         Question question = questionMapper.selectById(comment.getQuestionId());
-        // 如果问题创建者和评论创建者不是同一个人，则需要新建通知
-        if (!question.getCreator().equals(comment.getCommentator())) {
+
+        // 查询评论的父评论
+        Comment parentComment = null;
+        if (comment.getParentId() != null) {
+            // 查询该评论的父评论
+            parentComment = baseMapper.selectById(comment.getParentId());
+        }
+
+        /* 需要新建通知有两种情况：
+         * 1、问题创建者和评论创建者不是同一个
+         * 2、被评论的人和回复评论的人不是同一个
+         */
+        if (!question.getCreator().equals(comment.getCommentator()) ||
+                (parentComment != null && !parentComment.getCommentator().equals(comment.getCommentator()))) {
+            // TODO:逻辑有问题
             Notification notification = new Notification();
             notification.setQuestionId(question.getId());           // 通知显示评论了哪个问题
             notification.setParentCommentId(comment.getParentId()); // 通知显示评论了哪个父评论
             notification.setCommentId(comment.getId());             // 通知显示评论内容
             notification.setNotifier(comment.getCommentator());     // 通知显示谁发表评论
-            notification.setReceiver(question.getCreator());        // 通知显示谁接受评论
             notification.setStatus(false);                          // 通知显示该评论未被阅读
+            if (!question.getCreator().equals(comment.getCommentator())) {
+                notification.setReceiver(question.getCreator());        // 通知显示谁接受评论
+            } else {
+                notification.setReceiver(parentComment.getCommentator());        // 通知显示谁接受评论
+            }
             notificationMapper.insert(notification);
         }
     }
