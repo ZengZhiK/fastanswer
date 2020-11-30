@@ -62,7 +62,6 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
          */
         if (!question.getCreator().equals(comment.getCommentator()) ||
                 (parentComment != null && !parentComment.getCommentator().equals(comment.getCommentator()))) {
-            // TODO:逻辑有问题
             Notification notification = new Notification();
             notification.setQuestionId(question.getId());           // 通知显示评论了哪个问题
             notification.setParentCommentId(comment.getParentId()); // 通知显示评论了哪个父评论
