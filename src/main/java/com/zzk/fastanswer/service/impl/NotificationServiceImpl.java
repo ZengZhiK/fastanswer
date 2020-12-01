@@ -60,6 +60,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
 
             notificationDTO.setId(notification.getId());
             notificationDTO.setNotifierGithubName(user.getGithubName());
+            notificationDTO.setNotifierGithubHtmlUrl(user.getGithubHtmlUrl());
             notificationDTO.setNotifierGithubAvatarUrl(user.getGithubAvatarUrl());
             notificationDTO.setQuestionId(question.getId());
             notificationDTO.setQuestionTitle(question.getTitle());

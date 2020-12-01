@@ -20,8 +20,10 @@
     <!--回复列表-->
     <div class="media" th:each="notificationDTO : ${pageInfo.list}">
       <div class="media-left">
-        <img class="media-object img-thumbnail" th:src="${notificationDTO.notifierGithubAvatarUrl}"
-             style="width: 48px; height: 48px;">
+        <a th:href="${notificationDTO.notifierGithubHtmlUrl}" target="_blank">
+          <img class="media-object img-thumbnail" th:src="${notificationDTO.notifierGithubAvatarUrl}"
+               style="width: 48px; height: 48px;">
+        </a>
       </div>
       <div class="media-body">
         <h4 class="media-heading">
@@ -85,16 +87,26 @@
     var id = $(that).data('id');
     $.ajax({
       url: [[@{/notification}]],
-      type: 'put',
-      data: {id: id},
-      dataType: 'json',
-      success: function (response) {
-        if (response.ok) {
-          $(that).text('已读');
-          $(that).css("background-color", "lightslategray");
-        }
+        type
+  :
+    'put',
+        data
+  :
+    {
+      id: id
+    }
+  ,
+    dataType: 'json',
+        success
+  :
+
+    function (response) {
+      if (response.ok) {
+        $(that).text('已读');
+        $(that).css("background-color", "lightslategray");
       }
-    })
+    }
+  })
   }
 
   /*]]>*/

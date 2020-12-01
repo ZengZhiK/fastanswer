@@ -16,12 +16,17 @@ public class NotificationDTO {
     private Long id;
 
     /**
-     * 通知者GithubName
+     * 通知者Github name
      */
     private String notifierGithubName;
 
     /**
-     * 通知者GithubAvatarUrl
+     * 通知者 GitHub html url
+     */
+    private String notifierGithubHtmlUrl;
+
+    /**
+     * 通知者Github avatar url
      */
     private String notifierGithubAvatarUrl;
 
