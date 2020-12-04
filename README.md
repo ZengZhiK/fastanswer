@@ -7,6 +7,8 @@
 > - [【Spring Boot 实战】接入广告流量变现【第三季】](https://www.bilibili.com/video/BV1L4411y7J9)
 >
 > 本项目第二季、第三季还未开发.......
+>
+> 项目GitHub地址：https://github.com/ZengZhiK/fastanswer
 
 ## 在线演示地址
 
@@ -14,19 +16,24 @@
 
 希望各位小伙伴能在我的论坛系统上多多发言，帮助我测试一下系统，谢谢各位！
 
+具体使用：
+
+- GitHub登录 -> 提问 (Markdown语法、支持图片上传) -> 可在首页看到提问的问题
+- GitHub登录 -> 点击任意问题 -> 可以发表回复
+- GitHub登录 -> 点击头像 -> 可以查看自己发表的问题和别人的最新回复 (也可以点击小铃铛) 
+
 ## 本地运行手册
 
-1、`git clone https://github.com/ZengZhiK/fastanswer.git`把本项目的代码拉取下来，之后右键IntelliJ IDEA 启动，等待maven自动加载包
+**1、**`git clone https://github.com/ZengZhiK/fastanswer.git`把本项目的代码拉取下来，之后右键IntelliJ IDEA 启动，等待maven自动加载包
 
-2、使用MySQL数据库客户端软件（例如SQLyog、Navicat）执行脚本`sql/fastanswer.sql`创建fastanswer数据库
+**2、**使用MySQL数据库客户端软件（例如SQLyog、Navicat）执行脚本`sql/fastanswer.sql`创建fastanswer数据库
 
-3、重命名`src/main/resources/`目录下的`application-backup.yml`为`application.yml`，其中**为需要填写的参数
+**3、**重命名`src/main/resources/`目录下的`application-backup.yml`为`application.yml`，其中**为需要填写的参数
 
 <div align=center>
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/application.yml.png"/>
 </div>
-
-4、填写响应`application.yml`参数
+**4、**填写响应`application.yml`参数
 
 - MySQL数据库用户名和密码
 
@@ -51,7 +58,7 @@
 
   - 在密钥管理找到SecretId和SecretKey拷贝到`application.yml`对应处
 
-5、至此配置完毕，点击`com.zzk.fastanswer.FastanswerApplication`启动
+**5、**至此配置完毕，点击`com.zzk.fastanswer.FastanswerApplication`启动，在浏览器地址栏输入`http://localhost:8080/`访问
 
 ## 技术栈
 
@@ -105,6 +112,8 @@
 <div align=center>
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/publish.png"/>
 </div>
+提问支持Markdown语法、支持图片上传（腾讯云COS）
+
 
 - 我的问题页
 
@@ -117,6 +126,10 @@
 <div align=center>
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/latest_reply.png"/>
 </div>
+最新回复的个数是通过拦截器实现的，登录后每次请求都会先查询一下未读消息数，效率比较低......
+
+点击未读徽章可以标记该回复为已读
+
 
 - Error页
 
@@ -125,4 +138,14 @@
 </div>
 
 ## 写在最后
+
+第一次做Spring Boot项目，基本上是照着老师的代码CV一下，虽然加入了一些自己的想法，例如改进了全局异常处理、修改了前端样式、使用了更多的库简化开发，但最终开发的代码确实还是有点生硬，例如SQL语句没有优化，基本都是调用MyBatis-Plus逆向生成的API等，Java修行之路还很遥远。
+
+本项目还有很多可以改进的地方：
+
+- 没有设计配套的后台管理系统
+- 没有使用Redis做缓存以及Session管理，无法提高查询效率和搭建集群
+- 没有使用Elasticsearch做站内搜索，而是使用MySQL正则表达式查询，没有高亮
+- 没有使用消息队列做通知
+- ……
 
