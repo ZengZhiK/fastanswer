@@ -24,16 +24,16 @@
 
 ## 本地运行手册
 
-**1、**`git clone https://github.com/ZengZhiK/fastanswer.git`把本项目的代码拉取下来，之后右键IntelliJ IDEA 启动，等待maven自动加载包
+1、`git clone https://github.com/ZengZhiK/fastanswer.git`把本项目的代码拉取下来，之后右键IntelliJ IDEA 启动，等待maven自动加载包
 
-**2、**使用MySQL数据库客户端软件（例如SQLyog、Navicat）执行脚本`sql/fastanswer.sql`创建fastanswer数据库
+2、使用MySQL数据库客户端软件（例如SQLyog、Navicat）执行脚本`sql/fastanswer.sql`创建fastanswer数据库
 
-**3、**重命名`src/main/resources/`目录下的`application-backup.yml`为`application.yml`，其中**为需要填写的参数
+3、重命名`src/main/resources/`目录下的`application-backup.yml`为`application.yml`，其中**为需要填写的参数
 
 <div align=center>
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/application.yml.png"/>
 </div>
-**4、**填写响应`application.yml`参数
+4、填写响应`application.yml`参数
 
 - MySQL数据库用户名和密码
 
@@ -58,7 +58,7 @@
 
   - 在密钥管理找到SecretId和SecretKey拷贝到`application.yml`对应处
 
-**5、**至此配置完毕，点击`com.zzk.fastanswer.FastanswerApplication`启动，在浏览器地址栏输入`http://localhost:8080/`访问
+5、至此配置完毕，点击`com.zzk.fastanswer.FastanswerApplication`启动，在浏览器地址栏输入`http://localhost:8080/`访问
 
 ## 技术栈
 
