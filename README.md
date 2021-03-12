@@ -24,7 +24,7 @@
 
 ## 本地运行手册
 
-1、`git clone https://github.com/ZengZhiK/fastanswer.git`把本项目的代码拉取下来，之后右键IntelliJ IDEA 启动，等待maven自动加载包
+1、` git clone https://github.com/ZengZhiK/fastanswer.git `把本项目的代码拉取下来，之后右键IntelliJ IDEA 启动，等待maven自动加载包
 
 2、使用MySQL数据库客户端软件（例如SQLyog、Navicat）执行脚本`sql/fastanswer.sql`创建fastanswer数据库
 
@@ -33,6 +33,7 @@
 <div align=center>
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/application.yml.png"/>
 </div>
+
 4、填写响应`application.yml`参数
 
 - MySQL数据库用户名和密码
@@ -49,7 +50,7 @@
 
 - 注册腾讯云账号，找到对象储存COS（新用户可以免费使用半年），创建储存桶
 
-  - 可按这篇博客的步骤创建https://cloud.tencent.com/developer/article/1559746，注意要选择公有读私有写
+  - 可按这篇博客的步骤创建（注意要选择公有读私有写）：https://cloud.tencent.com/developer/article/1559746
   - 在概览找到储存桶名称、所属地域、访问域名拷贝到`application.yml`对应处
 
   <div align=center>
@@ -58,7 +59,7 @@
 
   - 在密钥管理找到SecretId和SecretKey拷贝到`application.yml`对应处
 
-5、至此配置完毕，点击`com.zzk.fastanswer.FastanswerApplication`启动，在浏览器地址栏输入`http://localhost:8080/`访问
+5、至此配置完毕，点击`com.zzk.fastanswer.FastanswerApplication`启动，在浏览器地址栏输入` http://localhost:8080/ `访问
 
 ## 技术栈
 
@@ -112,6 +113,7 @@
 <div align=center>
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/publish.png"/>
 </div>
+
 提问支持Markdown语法、支持图片上传（腾讯云COS）
 
 
@@ -126,10 +128,10 @@
 <div align=center>
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/latest_reply.png"/>
 </div>
+
 最新回复的个数是通过拦截器实现的，登录后每次请求都会先查询一下未读消息数，效率比较低......
 
 点击未读徽章可以标记该回复为已读
-
 
 - Error页
 
