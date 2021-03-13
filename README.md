@@ -22,7 +22,7 @@
 
 3、重命名`src/main/resources/`目录下的`application-backup.yml`为`application.yml`，其中`**`为需要填写的参数
 
-<div align=center>
+<div align="center">
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/application.yml.png"/>
 </div>
 
@@ -34,7 +34,7 @@
 
   - 在Github主页找到Setting=>Developer settings=>OAuth Apps=>New OAuth App填写
 
-  <div align=center>
+  <div align="center">
   <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/New OAuth App.png"/>
   </div>
 
@@ -46,7 +46,7 @@
   
   - 在概览找到储存桶名称、所属地域、访问域名拷贝到`application.yml`对应处
 
-  <div align=center>
+  <div align="center">
   <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/bucket.png"/>
   </div>
 
@@ -91,19 +91,19 @@
 
 - 首页
 
-<div align=center>
+<div align="center">
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/index.png"/>
 </div>
 
 - 问题详情页
 
-<div align=center>
+<div align="center">
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/question.png"/>
 </div>
 
 - 提问页
 
-<div align=center>
+<div align="center">
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/publish.png"/>
 </div>
 
@@ -112,13 +112,13 @@
 
 - 我的问题页
 
-<div align=center>
+<div align="center">
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/my_question.png"/>
 </div>
 
 - 最新回复页
 
-<div align=center>
+<div align="center">
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/latest_reply.png"/>
 </div>
 
@@ -128,6 +128,38 @@
 
 - Error页
 
-<div align=center>
+<div align="center">
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/error.png"/>
+</div>
+
+## redis分布式session
+
+- pom.xml引入
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-pool2</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.session</groupId>
+    <artifactId>spring-session-data-redis</artifactId>
+</dependency>
+```
+
+- 开启redis分布式session
+
+```java
+@Configuration
+@EnableRedisHttpSession(redisNamespace = "redis:session")
+public class RedisSessionConfig {
+}
+```
+
+<div align="center">
+<img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/redis.png"/>
 </div>

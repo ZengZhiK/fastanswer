@@ -16,6 +16,23 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 50MB
+  redis:
+    host: localhost
+    password: **
+    port: 6379
+    database: 1
+    # 连接超时时间（10秒）
+    timeout: PT10S
+    lettuce:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 1024
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）10秒
+        max-wait: PT10S
+        # 连接池中的最大空闲连接
+        max-idle: 200
+        # 连接池中的最小空闲连接
+        min-idle: 0
 
 github:
   client:

@@ -8,6 +8,7 @@ public class FastanswerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(FastanswerApplication.class, args);
+        System.out.println("http://localhost:8080");
     }
 
 }

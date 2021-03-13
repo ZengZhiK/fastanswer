@@ -2,6 +2,8 @@ package com.zzk.fastanswer.model.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * User Output DTO
  *
@@ -9,7 +11,10 @@ import lombok.Data;
  * @create 2020-11-20 21:35
  */
 @Data
-public class UserDTO {
+public class UserDTO implements Serializable {
+
+    private static final long serialVersionUID = 6811834374228618465L;
+
     /**
      * 主键
      */
