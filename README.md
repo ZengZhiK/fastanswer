@@ -1,20 +1,12 @@
 # FastAnswe—快答社区
 
-> 仿照B站UP主[@码匠笔记](https://space.bilibili.com/406041527)开发的开源论坛、问答系统，原版GitHub仓库[传送门](https://github.com/codedrinker/community)，视频链接地址如下：
->
-> - [【Spring Boot 实战】论坛项目【第一季】](https://www.bilibili.com/video/BV1r4411r7au)
-> - [【Spring Boot 实战】热门话题【第二季】](https://www.bilibili.com/video/BV1Z4411f7RK)
-> - [【Spring Boot 实战】接入广告流量变现【第三季】](https://www.bilibili.com/video/BV1L4411y7J9)
->
-> 本项目第二季、第三季还未开发.......
->
-> 项目GitHub地址：https://github.com/ZengZhiK/fastanswer
+> 本项目GitHub地址：https://github.com/ZengZhiK/fastanswer
 
 ## 在线演示地址
 
-部署在腾讯云服务器上：http://81.70.197.22:8080/
+~~部署在腾讯云服务器上：http://81.70.197.22:8080/~~ (由于XSS攻击，目前无法访问)
 
-希望各位小伙伴能在我的论坛系统上多多发言，帮助我测试一下系统，谢谢各位！
+~~希望各位小伙伴能在我的论坛系统上多多发言，帮助我测试一下系统，谢谢各位！~~
 
 具体使用：
 
@@ -28,7 +20,7 @@
 
 2、使用MySQL数据库客户端软件（例如SQLyog、Navicat）执行脚本`sql/fastanswer.sql`创建fastanswer数据库
 
-3、重命名`src/main/resources/`目录下的`application-backup.yml`为`application.yml`，其中**为需要填写的参数
+3、重命名`src/main/resources/`目录下的`application-backup.yml`为`application.yml`，其中`**`为需要填写的参数
 
 <div align=center>
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/application.yml.png"/>
@@ -50,7 +42,8 @@
 
 - 注册腾讯云账号，找到对象储存COS（新用户可以免费使用半年），创建储存桶
 
-  - 可按这篇博客的步骤创建（注意要选择公有读私有写）：https://cloud.tencent.com/developer/article/1559746
+  - 可按这篇博客 [Spring boot 上传文件到腾讯云对象储存COS（完整步骤流程）](https://cloud.tencent.com/developer/article/1559746) 的步骤创建（注意要选择公有读私有写）
+  
   - 在概览找到储存桶名称、所属地域、访问域名拷贝到`application.yml`对应处
 
   <div align=center>
@@ -138,16 +131,3 @@
 <div align=center>
 <img src="https://cdn.jsdelivr.net/gh/ZengZhiK/PicBed/FastAnswe—快答社区/error.png"/>
 </div>
-
-## 写在最后
-
-第一次做Spring Boot项目，基本上是照着老师的代码CV一下，虽然加入了一些自己的想法，例如改进了全局异常处理、修改了前端样式、使用了更多的库简化开发，但最终开发的代码确实还是有点生硬，例如SQL语句没有优化，基本都是调用MyBatis-Plus逆向生成的API等，Java修行之路还很遥远。
-
-本项目还有很多可以改进的地方：
-
-- 没有设计配套的后台管理系统
-- 没有使用Redis做缓存以及Session管理，无法提高查询效率和搭建集群
-- 没有使用Elasticsearch做站内搜索，而是使用MySQL正则表达式查询，没有高亮
-- 没有使用消息队列做通知
-- ……
-
